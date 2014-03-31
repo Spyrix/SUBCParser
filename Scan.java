@@ -8,10 +8,12 @@ public class Scan {
 		if(source.exists())
 			this.source = source;
 	}
-
+	//scan just one token at a time
+	//SCAN JUST ONE TOKEN AT A TIME?
 	public Token scanFile(){
 		//This method scans the file and partions everything into tokens. First it will check the next token for keywords
 		
 		//case Identifier
 	}
+
 }

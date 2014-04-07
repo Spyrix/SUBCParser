@@ -1,4 +1,4 @@
 SUBCParser
 ==========
 
-SUBC Parser created for Programming Language Concepts
+Parser for the language SUBC. Created for Programming Language Concepts

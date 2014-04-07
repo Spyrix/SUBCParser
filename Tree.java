@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Tree {
 	private Node root;
 
@@ -10,6 +12,6 @@ public class Tree {
 	}
 
 	public void traverseTree(){
-		
+
 	}
 }

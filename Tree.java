@@ -11,7 +11,7 @@ public class Tree {
 		return root;
 	}
 
-	public void traverseTree(){
+	public void printTree(){
 
 	}
 }

@@ -23,7 +23,7 @@ public class Scan {
 	}
 
 	public Scan(){
-
+		//this should never be called
 	}
 	//scan just one token at a time
 	//SCAN JUST ONE TOKEN AT A TIME?

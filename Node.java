@@ -1,14 +1,16 @@
+import java.util.*;
+
 public class Node{
 	private ArrayList<Node> children;
 	private Node parent;
 
 	public Node(Node parent){
 		this.parent = parent;
-		children = new ArrayList<Node>;
+		children = new ArrayList<Node>();
 	}
 
 	public Node(){
-		children = new ArrayList<Node>;
+		children = new ArrayList<Node>();
 	}
 
 	public Node getParent(){
@@ -46,6 +48,6 @@ public class Node{
 	}
 
 	public void addChild(Node child){
-		children.append(child);
+		children.add(child);
 	}
 }

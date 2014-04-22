@@ -3,9 +3,23 @@ import java.util.*;
 public class Node{
 	private ArrayList<Node> children;
 	private Node parent;
+	private String text;
+
+	public Node(Node parent, String text){
+		this.parent = parent;
+		this.text = text;
+		children = new ArrayList<Node>();
+	}
+
+	public Node(String text){
+		this.parent = null;
+		this.text = text;
+		children = new ArrayList<Node>();
+	}
 
 	public Node(Node parent){
 		this.parent = parent;
+		this.text = "No text";
 		children = new ArrayList<Node>();
 	}
 
@@ -48,6 +62,20 @@ public class Node{
 	}
 
 	public void addChild(Node child){
+		child.setParent(this);
 		children.add(child);
+	}
+
+	public void addSubTree(Tree subTree){
+		subTree.getRoot().setParent(this);
+		children.add(subTree.getRoot());
+	}
+	public void traverseSubTree(int level){
+		for(int i = 0; i < level; i++)
+			System.out.print(". ");
+		System.out.print(text+"("+children.size()+")");
+		if(!isLeaf())
+			for(Node child : children)
+				children.get(children.indexOf(child)).traverseSubTree(level+1);
 	}
 }

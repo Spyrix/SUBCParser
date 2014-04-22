@@ -30,12 +30,24 @@ public class p1 {
 			tokenList.add(scan.scanNextToken());
 		} while (scan.getNextToken().getText() != "eof");
 
-		for (Token t : tokenList)
-			System.out.println(t.getType() + "---" + t.getText());
+		//dont try to remove the tokens from the list, just like, ignore them based on type
+		for (int i = 0; i < tokenList.size(); i++){
+			if(!tokenList.get(i).getType().equals("space")&&!tokenList.get(i).getType().equals("comment")){
+				System.out.println(tokenList.get(i).getType()+"|||"+tokenList.get(i).getText());
+			}
+		}
+		/*
+		TokenGenerator generator = new TokenGenerator(tokenList);
+		Tree t = generator.generateTree();
+		if(printTree==true){
+			t.traverseTree();
+		}
+		//THE SECRET COMMAND FOR FILE PRINTING PURPOSES
+		if(args[2]!=null)
+			//save to file
+		*/
 	}
-
 }
-
 	/*
 			So there are two possible input in args. Either there is one input which is the location of the file to analyze
 

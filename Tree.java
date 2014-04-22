@@ -6,12 +6,14 @@ public class Tree {
 	public Tree(Node root){
 		this.root=root;
 	}
-
+	public Tree(){
+		this.root=null;
+	}
 	public Node getRoot(){
 		return root;
 	}
 
-	public void printTree(){
-
+	public void traverseTree(){
+		root.traverseSubTree(0);
 	}
 }

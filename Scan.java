@@ -138,8 +138,10 @@ public class Scan {
 
 			if(y.equals("."))
 				tokenText+=y;
-			else{
-				System.out.println("ERROR HERE");
+			else {
+				if(scanner.hasNext()){
+					System.out.println("ERROR HERE");
+				}
 				savedSpot=y;
 			}
 		}
@@ -233,8 +235,8 @@ public class Scan {
 				return "variable";
 				
 			case "const":
-				return "constant";
-				
+				return "const";
+
 			case "type":
 				return "type";
 				
@@ -412,7 +414,7 @@ public class Scan {
 		else if (Character.isDigit(beginningChar))
 			return "integer";
 		else
-			return "ERROR TOKEN NOT IDENTIFIED";
+			return "space";
 	}
 
 	public void setNextToken(Token token){

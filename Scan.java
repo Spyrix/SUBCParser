@@ -232,10 +232,10 @@ public class Scan {
 				return "program";
 				
 			case "var":
-				return "variable";
+				return "var";
 				
-			case "const":
-				return "const";
+			case "consts":
+				return "consts";
 
 			case "type":
 				return "type";
@@ -407,7 +407,7 @@ public class Scan {
 			//if it is longer than three or the character is a single quote, throw an exception!!!!
 		//identifies an identifier
 		else if (Character.toString(beginningChar).equals("_") || Character.isLetter(beginningChar))
-			return "indentifier";
+			return "identifier";
 		else if (Character.toString(beginningChar).equals("{"))
 			return "comment";
 		//identifies an integer

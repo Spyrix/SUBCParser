@@ -25,8 +25,9 @@ public class TreeGenerator{
 			name();
 			getNextToken();
 			if(!nextToken.getType().equals(":")){//the next token should be a colon, for correctness
-				error(":");
+				error(": in tiny"+"->"+nextToken.getText());
 			}
+			//getNextToken();
 			consts();
 			types();
 			dclns();
@@ -35,12 +36,12 @@ public class TreeGenerator{
 			name();
 			getNextToken();
 			if(!nextToken.getType().equals(".")){//The next token should be a period for correctness
-				error(".");
+				error(". in tiny"+"->"+nextToken.getText());
 			}
 			buildTree("program",7);//should be the final tree
 		}
 		else {
-			error("program");
+			error("program in tiny"+"->"+nextToken.getText());
 			//error
 		}
 	}
@@ -52,7 +53,7 @@ public class TreeGenerator{
 			buildTree("<identifier>", 1);
 		}
 		else {
-			error("identifier");
+			error("identifier in name"+"->"+nextToken.getText());
 			//error
 		}
 	}
@@ -60,26 +61,34 @@ public class TreeGenerator{
 	
 	public void consts(){
 		int n=0;
-		getNextToken();//gets next token which should be const, indicating a list of constants
+		///gets next token which should be const, indicating a list of constants
 		//list means expression , expression
-		if(nextToken.getType().equals("const")) {
-			do {
+		if(peekNextToken().getType().equals("const")) {
+			getNextToken();
+			while(!peekNextToken().getType().equals(";")){
 				constRule();
 				getNextToken();
-				if(!nextToken.getType().equals(",")){
-					error(",");
+				if(nextToken.getType().equals(";")){
+					break;
+				}
+				else if(!nextToken.getType().equals(",")){
+					error(", in consts"+"->"+nextToken.getText());
 				}
 				n++;
-			} while (!peekNextToken().getType().equals(";"));
+			}
 			getNextToken();//gets rid of the next token which should be a ";"
+
 		}
 		buildTree("consts",n);
 	}
 	
 	public void constRule(){
+		/*This is named constRule instead of const() cause it turns out that const is a reserved 
+		keyword in java, What does it do? NOTHING!!! It's a hold over from the C++ design.*/
+		name();
 		getNextToken();
 		if(!nextToken.getType().equals("=")){
-			error("=");
+			error("= in constRule");
 		}
 		constValue();
 		buildTree("const", 2);
@@ -100,15 +109,18 @@ public class TreeGenerator{
 			name();
 		}
 		else {
-			error("value");
+			error("char, integer, or identifier in constValue");
 			//error
 		}
 	}
 	public void types(){
 		int n=0;
 		//+means at least once
-		getNextToken();
-		if(nextToken.getType().equals("type")) {
+		/*
+			So I think that if there are no types than we just build a t
+		*/
+		if(peekNextToken().getType().equals("type")) {
+			getNextToken();
 			do {
 				type();
 				getNextToken();
@@ -116,16 +128,15 @@ public class TreeGenerator{
 					error(";");
 				}
 				n++;
-			} while (!peekNextToken().getType().equals("identifier"));
+			} while (peekNextToken().getType().equals("identifier"));
 		}
 		buildTree("types",n);
 	}
 	public void type(){
-		getNextToken();
 		name();
 		getNextToken();
 		if(!nextToken.getType().equals("=")){
-					error("=");
+					error("= in type");
 		}
 		litList();
 		buildTree("type", 2);
@@ -136,25 +147,25 @@ public class TreeGenerator{
 		//a list of names, seperated 
 		getNextToken();
 		if(!nextToken.getType().equals("(")){
-					error("(");
+					error("( in litList");
 		}
-		do {
+		while(!nextToken.getType().equals(")"));{
 			name();
 			getNextToken();
 			if(!nextToken.getType().equals(",")||!nextToken.getType().equals(")")){
-					error(",");
+					error(", or ) in litList");
 			}
 			n++;
-		} while(!nextToken.getType().equals(")"));
+		}
+		/*
 		getNextToken();//gets rid of the ")"
 		getNextToken();//this should be a ";"
 		if(!nextToken.getType().equals(";")){
 			error(";");
-		}
+		}*/
 		buildTree("lit", n);
 	}
 	public void dclns(){
-		getNextToken();
 		int n=0;
 		//first we have a var,
 		//then we have at least one dcln; but possibly more
@@ -164,9 +175,9 @@ public class TreeGenerator{
 				dcln();
 				getNextToken();
 				n++;
-			}while(!nextToken.getType().equals(";"));
+			}while(nextToken.getType().equals("function"));
 			if(!nextToken.getType().equals(";")){
-				error(";");//expected a ";"
+				error("; in dclns");//expected a ";"
 			}
 		}
 		buildTree("dclns",n);
@@ -177,8 +188,9 @@ public class TreeGenerator{
 		do{
 			name();
 			getNextToken();
+			System.out.println(nextToken.getType());
 			if(!nextToken.getType().equals(":")||!nextToken.getType().equals(",")){
-				error(",");//could also error on a ":"
+				error(", or : in dcln"+"->"+nextToken.getText());//could also error on a ":"
 			}
 			n++;
 		} while(!nextToken.getType().equals(":"));
@@ -197,26 +209,26 @@ public class TreeGenerator{
 	public void fcn(){
 		getNextToken();
 		if(!nextToken.getType().equals("function")){
-			error("function");
+			error("function in fcn"+"->"+nextToken.getText());
 		}
 		name();
 		getNextToken();
 		if(!nextToken.getType().equals("(")){
-			error("(");
+			error("( in fcn");
 		}
 		params();
 		getNextToken();
 		if(!nextToken.getType().equals(")")){
-			error(")");
+			error(") in fcn");
 		}
 		getNextToken();
 		if(!nextToken.getType().equals(":")){
-			error(":");
+			error(": in fcn");
 		}
 		name();
 		getNextToken();
 		if(!nextToken.getType().equals(";")){
-			error(";");
+			error("; in fcn");
 		}
 		consts();
 		types();
@@ -225,21 +237,21 @@ public class TreeGenerator{
 		name();
 		getNextToken();
 		if(!nextToken.getType().equals(";")){
-			error(";");
+			error("; in fcn");
 		}
 		buildTree("fcn", 8);
 	}
 	public void params(){
 		int n = 0;
 		//a list of dcln's each seperated by a semi colon
-		do{
+		while(peekNextToken().getType().equals("identifier")){
 				dcln();
 				getNextToken();
 				n++;
 				if(!nextToken.getType().equals(";")){
-					error(";");//expected a ";"
+					error("; in params");//expected a ";"
 				}
-		}while(peekNextToken.getType().equals("identifier"));
+		}
 		buildTree("params", n);
 	}
 	public void body(){
@@ -247,80 +259,175 @@ public class TreeGenerator{
 		int n = 0;
 		getNextToken();
 		if(!nextToken.getType().equals("begin")){
-			error("begin");
+			error("begin in body");
 		}
 		while(!peekNextToken().getType().equals("end")){
 			statement();
 			getNextToken();
 			if(nextToken.getType().equals(";")){
-				error(";");
+				error("; in body");
 			}
 			n++;
 		}
 		getNextToken();
 		if(!nextToken.getType().equals("end")){
-			error("end");
+			error("end in body");
 		}
 		buildTree("block", n);
 	}
 	public void statement(){
 		int n = 0;// wait I dont think statement actually builds out a tree... or at least, much of one
 		if(peekNextToken().getType().equals("output")){
+			int num=0;
 			getNextToken();
 			getNextToken();
 			if(nextToken.getType().equals("(")){
 				//a list of outExp() each seperated by a "," ending with an ")"
+				while(!peekNextToken().getType().equals(")")){
+					outExp();
+					getNextToken();
+					if(!nextToken.getType().equals(",")||!nextToken.getType().equals(")")){
+						error(", or ) in statement (output)");
+					}
+					num++;
+				}
+				buildTree("output",num);
 			}
 			else{
-				error("(");
+				error("( in statement (output)");
 			}
 		}
 		else if(peekNextToken().getType().equals("if")){
+			int num=2;
 			getNextToken();
 			expression();
-
+			getNextToken();
+			if(!nextToken.getType().equals("then")){
+				error("then in statement");
+			}
+			statement();
+			//the else appears to be optional
+			if(peekNextToken().getType().equals("else")){
+				getNextToken();
+				statement();
+				num++;
+			}
+			buildTree("if",num);
 		}
 		else if(peekNextToken().getType().equals("while")){
 			getNextToken();
 			expression();
 			getNextToken();
-			if(!nextToken.getType().equals("then")){
-				error("then");
+			if(!nextToken.getType().equals("do")){
+				error("do in statement (while)");
 			}
 			statement();
-			//It seems like the else is an optional part, this might break
-			if(peekNextToken().getType().equals("else")){
-				getNextToken();
-				statement();
-			}
-			
+			buildTree("while", 2);
 		}
 		else if(peekNextToken().getType().equals("read")){
 			/*
 				"read" followed by "(" followed by a list of name()s, each seperated by a
 				"," ending in a ")"
 			*/
+			int num = 0;
+			getNextToken();
+			getNextToken();
+			if(nextToken.getType().equals("(")){
+				while(!peekNextToken().getType().equals(")")){
+					if(!peekNextToken().getType().equals("identifier")){
+						error("identifier in statement (read)");
+					}
+					name();
+					getNextToken();
+					if(!nextToken.getType().equals(",")||!nextToken.getType().equals(")")){
+						error(", or ) in statement (read)");
+					}
+					num++;
+				}
+				buildTree("output",num);
+			}			
+			else{
+				error("( in statement (read)");
+			}
 		}
 		else if(peekNextToken().getType().equals("for")){
-			
+			getNextToken();
+			getNextToken();
+			if(!(nextToken.getType().equals("("))){
+				error("( in statement (for)");
+			}
+			forStat();
+			getNextToken();
+			if(!(nextToken.getType().equals(";"))){
+				error("; in statement (for)");
+			}
+			forExp();
+			getNextToken();
+			if(!(nextToken.getType().equals(";"))){
+				error("; in statement (for)");
+			}
+			forStat();
+			getNextToken();
+			if(!(nextToken.getType().equals(")"))){
+				error(") in statement (for)");
+			}
+			statement();
+			buildTree("for",4);
 		}
 		else if(peekNextToken().getType().equals("loop")){
 			/*
 			"loop" followed by a list of statement()s seperated by ";"s ending with "pool"
 			*/
+			int num = 0;
+			getNextToken();
+			while(!peekNextToken().getType().equals("pool")){
+				statement();
+				getNextToken();
+				if(!peekNextToken().getType().equals("pool")||!peekNextToken().getType().equals(";")){
+					error("pool or ; in statement (loop)");
+				}
+				num++;
+			}
+			buildTree("loop",num);
 		}
 		else if(peekNextToken().getType().equals("case")){
-			
+			//unfinished
+			getNextToken();
+			expression();
+			getNextToken();
+			if(!nextToken.getType().equals("of")){
+				error("of in statement (case)");
+			}
+			int clauses=caseClauses();
+			if(peekNextToken().getType().equals("otherwise")){
+				otherwiseClause();
+			}
+			getNextToken();
+			if(!nextToken.getType().equals("end")){
+				error("end in statement (case)");
+			}
+			buildTree("case",2+clauses);
 		}
 		else if(peekNextToken().getType().equals("repeat")){
 			/*"repeat" followed by a list of statement()s each seperated by ";", 
 			then a single "until" followed by one expression()*/
+			getNextToken();
+			int num = 1;
+			while(!peekNextToken().getType().equals("until")){
+				statement();
+				getNextToken();
+				if(!nextToken.getType().equals(";")||!peekNextToken().getType().equals("until")){
+					error("; or until in statement (repeat)");
+				}
+				num++;
+			}
+			expression();
+			buildTree("repeat",num);
 		}
 		else if(peekNextToken().getType().equals("return")){
-			/*
-			getNextToken()//should be a "return"
+			getNextToken();//should be a "return"
 			expression();
-			*/
+			buildTree("return",1);
 		}
 		else if(peekNextToken().getType().equals("exit")){
 			getNextToken();
@@ -338,7 +445,8 @@ public class TreeGenerator{
 		}
 	}
 	public void outExp(){
-		if(peekNextToken().getType().equals("string")){
+		getNextToken();
+		if(nextToken.getType().equals("string")){
 			stringNode();
 			buildTree("string",1);
 		}
@@ -348,10 +456,34 @@ public class TreeGenerator{
 		}
 	}
 	public void stringNode(){
+		//not sure if I should build a tree here.
 		buildTree("<string>", 0);
 	}
-	public void caseClauses(){
+	public int caseClauses(){
 		//one or more (caseClause() ';') so a caseClause() call followed by a ";"
+		int num=0;
+		do{
+			caseClause();
+			num++;
+		}while(peekNextToken().equals(";"));
+		buildTree("case_clause",num);
+		return num;
+	}
+	public void caseClause(){
+		int num = 0;
+		while(!nextToken.getType().equals(":")){
+			caseExpression();
+			getNextToken();
+			if(nextToken.getType().equals(":")){
+				break;
+			}
+			else if(!nextToken.getType().equals(",")){
+				error(", in caseClause");
+			}
+			num++;
+		}
+		statement();
+		buildTree("case_clause",num);
 	}
 	public void caseExpression(){
 		constValue();
@@ -360,6 +492,14 @@ public class TreeGenerator{
 			constValue();
 			buildTree("..", 2);
 		}
+	}
+	public void otherwiseClause(){
+		getNextToken();
+		if(!nextToken.getType().equals("otherwise")){
+			error("otherwise in otherwiseClause");
+		}
+		statement();
+		buildTree("otherwise",1);
 	}
 	public void assignment(){
 		name();
@@ -373,7 +513,7 @@ public class TreeGenerator{
 			buildTree("swap",2);
 		}
 		else{
-			error(";= or :=;");
+			error(";= or :=; in assignment");
 		}
 	}	
 	public void forStat(){
@@ -401,13 +541,13 @@ public class TreeGenerator{
 				expression();
 				break;
 			default:
-				getNextToken();
-				buildTree("<null>",0);
+				//getNextToken();
+				buildTree("true",0);
 		}
 	}
 	public void expression(){
 		term();
-		switch(peekNextToken()){
+		switch(peekNextToken().getType()){
 			case"<=":
 				getNextToken();
 				term();
@@ -438,15 +578,57 @@ public class TreeGenerator{
 				term();
 				buildTree("<>",2);
 				break;
-			default
+			default:
 				error("expression");
 		}
 	}
 	public void term(){
-		
+		factor();
+		/*
+			Then we expect a +, -, or an or followed by factor();
+		*/
+		getNextToken();
+		switch(nextToken.getType()){
+			case"+":
+				factor();
+				buildTree("+",2);
+				break;
+			case"-":
+				factor();
+				buildTree("-",2);
+				break;
+			case"or":
+				factor();
+				buildTree("or",2);
+				break;
+			default:
+				error("a value in term");
+		}
 	}
 	public void factor(){
-
+		primary();
+		getNextToken();
+		switch(nextToken.getType()){
+			case"*":
+				primary();
+				buildTree("*",2);
+				break;
+			case"/":
+				primary();
+				buildTree("/",2);
+				break;
+			case"and":
+				primary();
+				buildTree("and",2);
+				break;
+			case"mod":
+				primary();
+				buildTree("mod",2);
+				break;
+			default:
+				error("a value in factor");
+		}
+		
 	}
 	public void primary(){
 		switch(peekNextToken().getType()){
@@ -456,7 +638,8 @@ public class TreeGenerator{
 				buildTree("-",1);
 				break;
 			case "+":
-
+				primary();
+				break;
 			case "not":
 				getNextToken();
 				primary();
@@ -468,19 +651,82 @@ public class TreeGenerator{
 				break;
 			case "identifier":
 				name();
+				int num = 1;
 				if(peekNextToken().getType().equals("(")){
-					int n=0;
 					getNextToken();
 					while(!peekNextToken().getType().equals(",")){
 						expression();
 						//list means expression , expression
 						//+means at least once
 						//* 0 or more times
-						n++
+						num++;
+						getNextToken();
+						if(!nextToken.getType().equals(",")||!nextToken.getType().equals(")")){
+							error(", or ) in primary of case identifier");
+						}
 					}
-					getNextToken();
+					//getNextToken();
+				}
+				buildTree("call",num);
+				break;
+			case "(":
+				getNextToken();
+				expression();
+				getNextToken();
+				if(!nextToken.getType().equals(")")){
+					error(") in case '(' of primary");
 				}
 				break;
+			case "succ":
+				getNextToken();
+				getNextToken();
+				if(!nextToken.getType().equals("(")){
+					error("( in case 'succ' of primary");
+				}
+				expression();
+				getNextToken();
+				if(!nextToken.getType().equals(")")){
+					error(") in case 'succ' of primary");
+				}
+				break;
+			case "pred":
+				getNextToken();
+				getNextToken();
+				if(!nextToken.getType().equals("(")){
+					error("( in case 'pred' of primary");
+				}
+				expression();
+				getNextToken();
+				if(!nextToken.getType().equals(")")){
+					error(") in case 'pred' of primary");
+				}
+				break;
+			case "chr":
+				getNextToken();
+				getNextToken();
+				if(!nextToken.getType().equals("(")){
+					error("( in case 'chr' of primary");
+				}
+				expression();
+				getNextToken();
+				if(!nextToken.getType().equals(")")){
+					error(") in case 'chr' of primary");
+				}
+				break;
+			case "ord":
+				getNextToken();
+				getNextToken();
+				if(!nextToken.getType().equals("(")){
+					error("( in case 'ord' of primary");
+				}
+				expression();
+				getNextToken();
+				if(!nextToken.getType().equals(")")){
+					error(") in case 'ord' of primary");
+				}
+				break;
+			default:
+				error("in primary");
 		}
 	}
 	public void buildTree(String s, int n){
@@ -496,6 +742,9 @@ public class TreeGenerator{
 	}
 
 	public void getNextToken(){
+		while(tokens.get(index).getType().equals("comment")||tokens.get(index).getType().equals("space")){
+			index++;
+		}
 		nextToken=tokens.get(index);
 		index++;
 	}
@@ -506,8 +755,8 @@ public class TreeGenerator{
 
 	public void error(String s){
 		// maybe something along the lines of 
-		//System.out.println("Error, expects "+s);
-		//System.exit(0);
+		System.out.println("Error, expects "+s);
+		System.exit(0);
 	}
 
 }

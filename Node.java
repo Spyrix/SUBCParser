@@ -74,8 +74,9 @@ public class Node{
 		for(int i = 0; i < level; i++)
 			System.out.print(". ");
 		System.out.print(text+"("+children.size()+")");
-		if(!isLeaf())
+		if(!isLeaf()){
 			for(Node child : children)
 				children.get(children.indexOf(child)).traverseSubTree(level+1);
+		}
 	}
 }

@@ -30,14 +30,19 @@ public class p1 {
 			tokenList.add(scan.scanNextToken());
 		} while (scan.getNextToken().getText() != "eof");
 
-		//dont try to remove the tokens from the list, just like, ignore them based on type
-	/*	for (int i = 0; i < tokenList.size(); i++){
-			if(!tokenList.get(i).getType().equals("space")&&!tokenList.get(i).getType().equals("comment")){
-				System.out.println(tokenList.get(i).getType()+"|||"+tokenList.get(i).getText());
+		for(int i = 0; i < tokenList.size();i++){
+			if(tokenList.get(i).getType().equals("space")||tokenList.get(i).getType().equals("comment")){
+				tokenList.remove(i);
+				i--;
 			}
+		}
+		/*for (int i = 0; i < tokenList.size(); i++){
+				System.out.println(tokenList.get(i).getType()+"|||"+tokenList.get(i).getText());
 		}*/
+		
 		TreeGenerator generator = new TreeGenerator(tokenList);
 		Tree t = generator.generateTree();
+		
 		/*
 		Tree t = generator.generateTree();
 		if(printTree==true){

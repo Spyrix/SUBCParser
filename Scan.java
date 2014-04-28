@@ -140,7 +140,7 @@ public class Scan {
 				tokenText+=y;
 			else {
 				if(scanner.hasNext()){
-					System.out.println("ERROR HERE");
+					//System.out.println("ERROR HERE");
 				}
 				savedSpot=y;
 			}

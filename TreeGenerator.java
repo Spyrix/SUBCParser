@@ -24,10 +24,12 @@ public class TreeGenerator{
 			//read(program)
 			name();
 			getNextToken();
+			System.out.println(nextToken.getText());
 			if(!nextToken.getType().equals(":")){//the next token should be a colon, for correctness
 				error(": in tiny"+"->"+nextToken.getText());
 			}
 			//getNextToken();
+			System.out.println(peekNextToken().getText());
 			consts();
 			types();
 			dclns();
@@ -170,7 +172,9 @@ public class TreeGenerator{
 		//first we have a var,
 		//then we have at least one dcln; but possibly more
 		//+means one or more
-		if(nextToken.getType().equals("var")){
+		System.out.println(peekNextToken().getText());
+		if(peekNextToken().getType().equals("var")){
+			getNextToken();
 			do{
 				dcln();
 				getNextToken();

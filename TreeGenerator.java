@@ -118,9 +118,7 @@ public class TreeGenerator{
 	public void types(){
 		int n=0;
 		//+means at least once
-		/*
-			So I think that if there are no types than we just build a t
-		*/
+		//'type' followed by at least one type type() ';'
 		if(peekNextToken().getType().equals("type")) {
 			getNextToken();
 			do {
@@ -135,6 +133,7 @@ public class TreeGenerator{
 		buildTree("types",n);
 	}
 	public void type(){
+		//name() followed by '=' and litList()
 		name();
 		getNextToken();
 		if(!nextToken.getType().equals("=")){

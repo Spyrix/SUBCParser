@@ -68,7 +68,7 @@ public class Node{
 
 	public void addSubTree(Tree subTree){
 		subTree.getRoot().setParent(this);
-		children.add(subTree.getRoot());
+		children.add(0,subTree.getRoot());
 	}
 	public void traverseSubTree(int level){
 		for(int i = 0; i < level; i++)

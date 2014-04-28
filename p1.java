@@ -15,7 +15,7 @@ public class p1 {
 		//first we get the file path.
 		if(args.length > 1) {
 			source = new File(args[1]);
-			if(args[0]=="-ast")
+			if(args[0].equals("-ast"))
 				printTree = true;
 			else
 				System.out.println("Unknown tag, please retry");
@@ -29,29 +29,28 @@ public class p1 {
 		do {
 			tokenList.add(scan.scanNextToken());
 		} while (scan.getNextToken().getText() != "eof");
-
+		//remove the comments and spaces
 		for(int i = 0; i < tokenList.size();i++){
 			if(tokenList.get(i).getType().equals("space")||tokenList.get(i).getType().equals("comment")){
 				tokenList.remove(i);
 				i--;
 			}
 		}
-		/*for (int i = 0; i < tokenList.size(); i++){
+		/*
+		for (int i = 0; i < tokenList.size(); i++){
 				System.out.println(tokenList.get(i).getType()+"|||"+tokenList.get(i).getText());
 		}*/
 		
 		TreeGenerator generator = new TreeGenerator(tokenList);
 		Tree t = generator.generateTree();
 		
-		/*
-		Tree t = generator.generateTree();
 		if(printTree==true){
 			t.traverseTree();
 		}
 		//THE SECRET COMMAND FOR FILE PRINTING PURPOSES
-		if(args[2]!=null)
+		//if(args[2]!=null)
 			//save to file
-		*/
+	
 	}
 }
 	/*

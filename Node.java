@@ -73,7 +73,7 @@ public class Node{
 	public void traverseSubTree(int level){
 		for(int i = 0; i < level; i++)
 			System.out.print(". ");
-		System.out.print(text+"("+children.size()+")");
+		System.out.println(text+"("+children.size()+")");
 		if(!isLeaf()){
 			for(Node child : children)
 				children.get(children.indexOf(child)).traverseSubTree(level+1);

@@ -1,6 +1,9 @@
 import java.util.*;
 import java.io.*;
-
+/*
+William Frazee
+#1355-5441
+*/
 public class Scan {
 	private File source;
 	private Scanner scanner;
@@ -69,6 +72,27 @@ public class Scan {
 					y = scanner.next();
 				if(y.equals("}")==false&&scanner.hasNext()==false)
 					System.out.println("Something is wrong... there should be another }");
+			}
+			tokenText+=y;
+		}
+		//grabs a line comment
+		if(x.equals("#")){
+				String y = "";
+			if(scanner.hasNext())
+				y=scanner.next();
+			else
+				System.out.print("The file shouldn't end here, problem!!");
+
+			if(y.equals("\n"))
+				tokenText+=y;
+
+			while(y.equals("\n")==false&&scanner.hasNext()){
+				//System.out.println("loop1");
+				tokenText+=y;
+				if(scanner.hasNext())
+					y = scanner.next();
+				if(y.equals("\n")==false&&scanner.hasNext()==false)
+					System.out.println("Something is wrong... there should be another \\n");
 			}
 			tokenText+=y;
 		}
@@ -231,6 +255,9 @@ public class Scan {
 			case "program":
 				return "program";
 				
+			case "\\t":
+				return "tab";
+
 			case "var":
 				return "var";
 				
@@ -408,7 +435,7 @@ public class Scan {
 		//identifies an identifier
 		else if (Character.toString(beginningChar).equals("_") || Character.isLetter(beginningChar))
 			return "identifier";
-		else if (Character.toString(beginningChar).equals("{"))
+		else if (Character.toString(beginningChar).equals("{")||Character.toString(beginningChar).equals("#"))
 			return "comment";
 		//identifies an integer
 		else if (Character.isDigit(beginningChar))

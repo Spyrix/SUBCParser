@@ -1,5 +1,9 @@
 import java.util.*;
-
+/*
+William Frazee
+#1355-5441
+This class represents the tree
+*/
 public class Tree {
 	private Node root;
 

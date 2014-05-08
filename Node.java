@@ -1,5 +1,9 @@
 import java.util.*;
-
+/*
+William Frazee
+#1355-5441
+This class is responsible for representing the nodes in the tree
+*/
 public class Node{
 	private ArrayList<Node> children;
 	private Node parent;
@@ -67,10 +71,12 @@ public class Node{
 	}
 
 	public void addSubTree(Tree subTree){
+		//this is one of the important methods. it appends the subtree to the leftmost position of the arraylist
 		subTree.getRoot().setParent(this);
 		children.add(0,subTree.getRoot());
 	}
 	public void traverseSubTree(int level){
+		//this method travels through the tree. The int level tells us which level the node is on so that we know how many dots to print out
 		for(int i = 0; i < level; i++)
 			System.out.print(". ");
 		System.out.println(text+"("+children.size()+")");
